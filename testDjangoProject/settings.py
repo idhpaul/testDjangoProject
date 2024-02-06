@@ -25,11 +25,10 @@ SECRET_KEY = 'django-insecure-oy=z#7-gr3edk$7rpqhyjc3xa$1@4f3r^$ob6uil=hy8jtipe-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -37,7 +36,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "rest_framework",
+    "rest_framework_api_key",
+    'oneoff',
 ]
+
+API_KEY_CUSTOM_HEADER = "HTTP_X_API_KEY"
+
+REST_FRAMEWORK = {
+
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -75,9 +83,13 @@ WSGI_APPLICATION = 'testDjangoProject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'django.db.backends.mysql',
+        "NAME": "TESTDB",
+        "USER": "hanedutech",
+        "PASSWORD": "Hanedu1802!!",
+        "HOST": "172.31.50.156",
+        "PORT": "3306",
+    },
 }
 
 
