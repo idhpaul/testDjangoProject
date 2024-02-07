@@ -27,6 +27,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+# {appName}.{Custom Model Name}
+AUTH_USER_MODEL = "checkself.Buyer"
+
+# (rest_framework_api_key) use at rest_framework_api_key
+API_KEY_CUSTOM_HEADER = "HTTP_X_API_KEY"
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -37,29 +43,25 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "rest_framework",
     "rest_framework_api_key",
-    'allauth',
-    'allauth.account',
+    'rest_framework_simplejwt',
 
     # use rest_framework_api_key package
     'oneoff',
 
-    # use allauth package
+    # use simplejwt package
     'checkself'
 ]
 
-# (rest_framework_api_key) use at rest_framework_api_key
-API_KEY_CUSTOM_HEADER = "HTTP_X_API_KEY"
-
 REST_FRAMEWORK = {
 
+    # (simplejwt)
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
 }
 
 AUTHENTICATION_BACKENDS = [
-    # (allauth) Needed to login by username in Django admin, regardless of `allauth`
-    'django.contrib.auth.backends.ModelBackend',
 
-    # (allauth) `allauth` specific authentication methods, such as login by email
-    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 MIDDLEWARE = [
@@ -71,8 +73,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    # (allauth) Add the account middleware:
-    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = 'testDjangoProject.urls'
@@ -89,8 +89,6 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 
-                # (allauth) `allauth` needs this from django
-                'django.template.context_processors.request',
             ],
         },
     },
