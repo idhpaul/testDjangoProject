@@ -53,6 +53,7 @@ INSTALLED_APPS = [
 ]
 
 REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',
 
     # (simplejwt)
     'DEFAULT_AUTHENTICATION_CLASSES': (
