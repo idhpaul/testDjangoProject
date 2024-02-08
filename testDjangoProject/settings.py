@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 
+from datetime import timedelta
+from .my_settings import MY_SECRET, MY_DATABASES
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-oy=z#7-gr3edk$7rpqhyjc3xa$1@4f3r^$ob6uil=hy8jtipe-'
+SECRET_KEY = MY_SECRET['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -30,40 +33,99 @@ ALLOWED_HOSTS = ['*']
 # {appName}.{Custom Model Name}
 AUTH_USER_MODEL = "checkself.Buyer"
 
-# (rest_framework_api_key) use at rest_framework_api_key
-API_KEY_CUSTOM_HEADER = "HTTP_X_API_KEY"
 
 # Application definition
-INSTALLED_APPS = [
+DJANGO_APPS = [
+    # make db table list
+    #   auth_group
+    #   auth_group_permissions
+    #   auth_permission
+    #   django_admin_log
+    #   django_content_type
+    #   django_migrations
+    #   django_session
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    "rest_framework",
-    "rest_framework_api_key",
-    'rest_framework_simplejwt',
+]
 
+PROJECT_APPS = [
     # use rest_framework_api_key package
     'oneoff',
-
-    # use simplejwt package
+    # use allauth package
     'checkself'
 ]
+
+THIRD_PARTY_APPS = [
+	"rest_framework",
+    "rest_framework_api_key",
+    'rest_framework_simplejwt',
+]
+
+INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
+
+# package additional settings
+# (rest_framework_api_key) using KeyParser class in rest_framework_api_key package
+API_KEY_CUSTOM_HEADER = "HTTP_X_API_KEY"
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": False,
+    "UPDATE_LAST_LOGIN": True,
+
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": SECRET_KEY,
+    "VERIFYING_KEY": "",
+    "AUDIENCE": None,
+    "ISSUER": None,
+    "JSON_ENCODER": None,
+    "JWK_URL": None,
+    "LEEWAY": 0,
+
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
+    "USER_ID_FIELD": "id",
+    "USER_ID_CLAIM": "user_id",
+    "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
+
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+    "TOKEN_TYPE_CLAIM": "token_type",
+    "TOKEN_USER_CLASS": "rest_framework_simplejwt.models.TokenUser",
+
+    "JTI_CLAIM": "jti",
+
+    "SLIDING_TOKEN_REFRESH_EXP_CLAIM": "refresh_exp",
+    "SLIDING_TOKEN_LIFETIME": timedelta(minutes=5),
+    "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
+
+    "TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainPairSerializer",
+    "TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSerializer",
+    "TOKEN_VERIFY_SERIALIZER": "rest_framework_simplejwt.serializers.TokenVerifySerializer",
+    "TOKEN_BLACKLIST_SERIALIZER": "rest_framework_simplejwt.serializers.TokenBlacklistSerializer",
+    "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
+    "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
+}
 
 REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',
 
-    # (simplejwt)
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
 
-AUTHENTICATION_BACKENDS = [
+# AUTHENTICATION_BACKENDS = [
 
-]
+# ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -73,7 +135,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
 ]
 
 ROOT_URLCONF = 'testDjangoProject.urls'
@@ -97,21 +158,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'testDjangoProject.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        "NAME": "TESTDB",
-        "USER": "hanedutech",
-        "PASSWORD": "Hanedu1802!!",
-        "HOST": "172.31.50.156",
-        "PORT": "3306",
-    },
-}
-
+DATABASES = MY_DATABASES
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
