@@ -124,7 +124,8 @@ REST_FRAMEWORK = {
 }
 
 # AUTHENTICATION_BACKENDS = [
-
+#     'django.contrib.auth.backends.ModelBackend',
+#     'testDjangoProject.my_auth_backend.AuthenticationWithoutPassword',
 # ]
 
 MIDDLEWARE = [
