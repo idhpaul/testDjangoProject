@@ -1,6 +1,7 @@
 import datetime
 from django.http import HttpRequest, Http404
 from django.contrib.auth import login
+from django.contrib.auth.models import update_last_login
 
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import ValidationError, NotFound
@@ -10,8 +11,19 @@ from rest_framework.decorators import permission_classes
 
 from .models import Buyer
 
+from rest_framework_simplejwt.tokens import RefreshToken
+
+def get_tokens_for_user(user):
+    refresh = RefreshToken.for_user(user)
+
+    return {
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+    }
+
 
 @api_view(['POST'])
+@permission_classes([])
 def self(request:HttpRequest):
     # client send email address
     data = request.data
@@ -40,10 +52,14 @@ def self(request:HttpRequest):
                 })
 
     # make jwt token
+    token = get_tokens_for_user(buyer)
+
+    update_last_login(None, buyer)
 
     # response jwt token
     return Response(data={
-            "result" : "user created"
+            "result" : "user created",
+            "token" : token
     })
 
 @api_view(['POST'])

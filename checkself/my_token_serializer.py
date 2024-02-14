@@ -17,6 +17,7 @@ class TokenObtainPairWithoutPasswordSerializer(TokenObtainPairSerializer):
         attrs.update({'password': ''})
         return super(TokenObtainPairWithoutPasswordSerializer, self).validate(attrs)
     
+    
 
 class TokenObtainPairWithoutPasswordView(TokenViewBase):
     serializer_class = TokenObtainPairWithoutPasswordSerializer
