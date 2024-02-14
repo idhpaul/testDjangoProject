@@ -22,7 +22,8 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
-from .my_token_serializer import TokenObtainPairWithoutPasswordView
+from checkself.my_token_serializer import TokenObtainPairWithoutPasswordView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -5,6 +5,8 @@ from django.contrib.auth import login
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import ValidationError, NotFound
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import permission_classes
 
 from .models import Buyer
 
@@ -42,4 +44,22 @@ def self(request:HttpRequest):
     # response jwt token
     return Response(data={
             "result" : "user created"
+    })
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def foo(request:HttpRequest):
+
+    # Need Header Informaion
+    # key :     Authorization 
+    # value :   Bearer <access-key> 
+
+    # client send email address
+    data = request.data
+    print(data)
+    
+
+    # response jwt token
+    return Response(data={
+            "result" : "token auth"
     })
