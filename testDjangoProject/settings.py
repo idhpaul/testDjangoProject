@@ -57,7 +57,10 @@ PROJECT_APPS = [
     # use rest_framework_api_key package
     'oneoff',
     # use allauth package
-    'checkself'
+    'checkself',
+    
+    # temp user
+    'tempuser',
 ]
 
 THIRD_PARTY_APPS = [
