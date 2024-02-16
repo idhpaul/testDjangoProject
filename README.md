@@ -23,5 +23,25 @@
 ## App name convention
 * all-lowercase names
    > user, core ..
+
+## User Sequence Diagram
+```
+sequenceDiagram
+    actor c as User
+    participant s as IAP_Backend
+
+    c->>+s:/wake
+    Note right of s: Server Public Key(pubkey)
+    s-->>-c:server public key
+    c->>+s:/auth
+    Note right of s: pubkey.encrypt<br/><br/>{<br/>'email':'foo@foo.com',<br/>'device_id':'bad8274e04c6f2c6',<br/>'device_os':'Android'<br/>}
+    s-->>-c:jwt token
+
+#doc : https://mermaid.js.org/syntax/sequenceDiagram.html
+#config : "noteAlign": "left"
+
+```
+
+
     
     

@@ -39,6 +39,7 @@ class Buyer(AbstractBaseUser):
     is_admin = models.BooleanField(default=False)
     # free_goods_count 무료 재화
     # pay_goods_count 유료 재화
+    # device id
 
     objects = BuyerManager()
 
@@ -46,7 +47,7 @@ class Buyer(AbstractBaseUser):
     REQUIRED_FIELDS = []
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)  # Call the "real" save() method.
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.email
