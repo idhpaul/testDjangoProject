@@ -15,7 +15,10 @@ pem = private_key.private_bytes(
    encryption_algorithm=serialization.BestAvailableEncryption(bytes(MY_SECRET['SECRET_KEY'],'utf-8'))
 )
 
-print(pem.splitlines()[1])
+print(pem)
+
+with open("rsa_2048.pem", "wb") as f:
+  f.write(pem)
 
 public_key = private_key.public_key()
 pempub = public_key.public_bytes(
@@ -23,4 +26,7 @@ pempub = public_key.public_bytes(
    format=serialization.PublicFormat.SubjectPublicKeyInfo
 )
 
-print(pempub.splitlines()[1])
+print(pempub)
+
+with open("rsa_2048.pub", "wb") as f:
+  f.write(pempub)

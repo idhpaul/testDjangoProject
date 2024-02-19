@@ -1,3 +1,4 @@
+import base64
 import datetime
 from django.http import HttpRequest, Http404
 from django.contrib.auth import login
@@ -8,6 +9,12 @@ from rest_framework.exceptions import ValidationError, NotFound
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
+
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives import serialization
+
+from testDjangoProject.my_settings import MY_SECRET
 
 from .models import Buyer
 
@@ -20,6 +27,56 @@ def get_tokens_for_user(user):
         'refresh': str(refresh),
         'access': str(refresh.access_token),
     }
+    
+@api_view(['GET'])
+@permission_classes([])
+def wake(request:HttpRequest):
+    # client send email address
+    data = request.data
+    print(data)
+    
+    with open('./testDjangoProject/rsa_2048.pub', mode='rb') as file: # b is important -> binary
+        fileContent = file.read()
+    
+    print(fileContent)
+
+    # response jwt token
+    return Response(data={
+            "result" : fileContent,
+    })
+    
+@api_view(['POST'])
+@permission_classes([])
+def auth(request:HttpRequest):
+    # client send email address
+    data = request.data['data']
+    print(data)
+    
+    chipertext = base64.urlsafe_b64decode(data)
+    print(chipertext)
+    
+    with open("./testDjangoProject/rsa_2048.pem", "rb") as key_file:
+        private_key = serialization.load_pem_private_key(
+            key_file.read(),
+            password=bytes(MY_SECRET['SECRET_KEY'],'utf-8'),
+        )
+    
+    plaintext = private_key.decrypt(
+        chipertext,
+        padding.OAEP(
+            mgf=padding.MGF1(algorithm=hashes.SHA256()),
+            algorithm=hashes.SHA256(),
+            label=None
+        )
+    )
+    
+    print(plaintext)
+
+
+    # response jwt token
+    return Response(data={
+            "result" : "",
+    })
 
 
 @api_view(['POST'])

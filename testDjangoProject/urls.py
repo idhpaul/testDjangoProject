@@ -27,11 +27,11 @@ from checkself.my_token_serializer import TokenObtainPairWithoutPasswordView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    
-    path("accounts/", include("django.contrib.auth.urls")),
-    
+        
     path('oneoff/', include('oneoff.urls')),
     path('checkself/', include('checkself.urls')),
+    
+    path('wake/',include('checkself.urls')),
 
 
     path('api/token/', TokenObtainPairWithoutPasswordView.as_view(), name='token_obtain_pair'),
