@@ -25,7 +25,7 @@
    > user, core ..
 
 ## User Sequence Diagram
-```
+```mermaid
 sequenceDiagram
     actor c as User
     participant s as IAP_Backend
